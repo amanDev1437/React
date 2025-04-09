@@ -9,7 +9,7 @@ export function Form({ onAddItem }) {
 
     if (!description) return;
 
-    const newItem = { quantity, description, packed: false, id: Date.now() };
+    const newItem = { quantity, description, packed: false,};
     console.log(newItem);
 
     onAddItem(newItem);
