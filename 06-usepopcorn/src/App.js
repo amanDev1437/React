@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import StarRating from "./components/StarRating";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const tempMovieData = [
   {
@@ -150,7 +151,9 @@ export default function App() {
 }
 
 function Loader() {
-  return <p className="loader">Loading...</p>;
+  return <div className="loader">
+    <CircularProgress />
+  </div>;
 }
 
 function ErrorMessage({ message }) {
