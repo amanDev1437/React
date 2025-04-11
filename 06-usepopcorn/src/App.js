@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./components/StarRating";
 import CircularProgress from '@mui/material/CircularProgress';
+import { useMovies } from "./useMovies";
 
 const tempMovieData = [
   {
@@ -54,15 +55,12 @@ const average = (arr) =>
 
 const KEY = "81c3713f";
 const API_URL = `https://www.omdbapi.com/?apikey=${KEY}`;
-const tempQuery = "batman";
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [slectedId, setSlectedId] = useState(null);
+  const {movies, error, isLoading} = useMovies(query) 
 
   // useEffect(function () {
   //   fetch(`${API_URL}&s=batman`)
@@ -78,45 +76,7 @@ export default function App() {
     setSlectedId(null);
   }
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function fetchMovies() {
-      setIsLoading(true);
-      setError("");
-      try {
-        const res = await fetch(`${API_URL}&s=${query || tempQuery}`, {
-          signal: controller.signal,
-        });
-
-        if (!res.ok) {
-          throw new Error("Something went wrong with the API");
-        }
-
-        const data = await res.json();
-
-        if (data.Response === "False") {
-          throw new Error(data.Error);
-        }
-
-        setMovies(data.Search);
-      } catch (err) {
-        console.log(err);
-        if(err.name !== "AbortError"){
-          setError(err.message);
-
-        }
-        
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchMovies();
-
-    return function () {
-      controller.abort();
-    };
-  }, [query]);
+   
 
   return (
     <>
@@ -187,6 +147,25 @@ function NumResults({ movies }) {
 }
 
 function Search({ query, setQuery }) {
+
+  const inputEl = useRef(null);
+
+  useEffect(()=>{
+    
+    function callback(event){
+
+      if(document.activeElement === inputEl.current) return;
+
+      if(event.code==="Enter"){
+        inputEl.current.focus();
+        setQuery("");
+      }
+    }
+
+    document.addEventListener("keydown",callback)
+    return () => document.addEventListener("keydown", callback);
+  },[setQuery])
+
   return (
     <input
       className="search"
@@ -194,6 +173,7 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
