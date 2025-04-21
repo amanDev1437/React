@@ -6,7 +6,7 @@ import {useEffect, useReducer} from "react";
 import StartScreen from "./StartScreen";
 import Question from "./Question";
 
-const initialState = { questions:[], status:"loading", index:0}
+const initialState = { questions:[], status:"loading", index:0, answer:null, points:0}
 
 function reducer(state, action){
     switch(action.type){
@@ -26,6 +26,15 @@ function reducer(state, action){
                 ...state,
                 status:"active"
             }
+        case "newAnswer":
+            const question = state.questions.at(state.index);
+
+            return {
+                ...state,
+                answer:action.payload,
+                points:action.payload === question.correctOption ? state.points+ question.points : state.points
+
+            }
         default:
             throw new Error("Action unknown");
     }
@@ -34,7 +43,7 @@ function reducer(state, action){
 
 export default function App(){
 
-    const [{questions, status, index}, dispatch] = useReducer(reducer, initialState);
+    const [{questions, status, index, answer}, dispatch] = useReducer(reducer, initialState);
 
     const numQuestions = questions.length;
 
@@ -61,7 +70,7 @@ export default function App(){
             {status==='loading' && <Loader />}
             {status==='error' && <Error />}
             {status==='ready' && <StartScreen numQuestions={numQuestions} dispatch={dispatch}/>}
-            {status==='active' && <Question question={questions[index]} />}
+            {status==='active' && <Question question={questions[index]} dispatch={dispatch} answer={answer} />}
         </Main>
         
     </div>
