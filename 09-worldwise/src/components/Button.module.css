@@ -15,7 +15,7 @@
   color: var(--color-dark--1);
 }
 
-.back {
+.button {
   font-weight: 600;
   background: none;
   border: 1px solid currentColor;
