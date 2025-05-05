@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useContext, useReducer } from "react";
 
@@ -65,7 +66,7 @@ function CitiesProvider({ children }) {
 
   async function getCity(id) {
     if(Number(id)===currentCity.id) return;
-    
+
     dispatch({ type: "loading" });
     try {
       const res = await fetch(`${BASE_URL}/cities/${id}`);
@@ -116,6 +117,7 @@ function CitiesProvider({ children }) {
         getCity,
         createCity,
         deleteCity,
+        error
       }}
     >
       {children}
