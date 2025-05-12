@@ -153,7 +153,7 @@ function Search({ query, setQuery }) {
   useEffect(()=>{
     
     function callback(event){
-
+      console.log(inputEl)
       if(document.activeElement === inputEl.current) return;
 
       if(event.code==="Enter"){
