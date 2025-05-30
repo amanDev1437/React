@@ -57,7 +57,7 @@ function CabinRow({ cabin }) {
     maxCapacity,
     regularPrice,
     discount,
-    image,
+    imagePath,
     description,
   } = cabin;
 
@@ -67,7 +67,7 @@ function CabinRow({ cabin }) {
       maxCapacity,
       regularPrice,
       discount,
-      image,
+      //image,
       description,
     });
   }
@@ -75,7 +75,7 @@ function CabinRow({ cabin }) {
   return (
     <>
       <TableRow role="row">
-        <Img src={image} />
+        <Img key={imagePath} src={`http://localhost:8080/${imagePath}`} />
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
